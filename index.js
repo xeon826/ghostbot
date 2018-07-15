@@ -12,6 +12,7 @@ const colors = require('irc-colors');
 /*
     Constants
 */
+// comment
 
 const FACES = [
     "(ц｀ω´ц*)",
