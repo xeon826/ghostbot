@@ -6,81 +6,85 @@
 
 let IrcClient = require("irc").Client;
 const CONFIG = require("./config.json");
-const EMOTE = require("./emote.json");
+const EMOTE = require('./emote.json');
 const colors = require('irc-colors');
-const colorsg = require('irc-colors').global();
-let bot = new IrcClient(CONFIG.server, CONFIG.nick, CONFIG.connection);
 
-	
-const TAYTAYMSGS = [
-    colors.violet("your words always lif† my spiri†s, †ay†ay"),
-    colors.violet("i've been dying to speak to you again, dear"),
-    colors.violet("my longing for you is supernatural, baby"),
-    colors.violet("jus† one more nigh†. No wine, no BOOs"),
-    colors.violet("i'd ask you out to a bar some†ime, bu† they'd jus† say \"no spiri†s\""),
-    colors.violet("jus† make an album abou† me pls and i wont making any more BOOring puns"),
-    colors.violet("†he washing†on ghost says that you and i should get †oge†her"),
-    colors.violet("remember †he †ime when we were a† blockbus†ers, and †hey said †hey had bambi, and i said bamBOO?"),
-    colors.violet("i recen†ly published a biography about you, bu† i used a ghos†wri†er"),
-    colors.violet("did you hear abou† the par†y ins†allgen2 was †hrowing? he said anything GHO-you know wha† †his was a shi††y pun")
+/*
+    Constants
+*/
+
+const FACES = [
+    "(ц｀ω´ц*)",
+    "“ψ(｀∇´)ψ",
+    "ψ(*｀ー´)ψ",
+    "Ψ(｀▽´)Ψ",
+    "Ψ(｀◇´)Ψ",
+    "(屮｀∀´)屮",
+    "Щ(･｀ω´･Щ)",
+    "Ψ(￣∀￣)Ψ",
+    "Ψ(☆ｗ☆)Ψ",
+    "Ψ( ●｀▽´● )Ψ",
+    "ψ（｀Д´）ψ",
+    "ლ(｀∀´ლ)",
+    "＜(●｀∀´●)＞”",
+    "o(○｀ω´○)9",
+    "ρ(｀.´)ρ",
+    "पुनः कदा मेलिष्यामः ?"
 ];
-const MSGS = [
-    //colors.violet("-(๑☆‿ ☆#)ᕗ Gruß"),
-    colors.violet('DAMN, DANIEL!!')+colors.cyan(EMOTE.LAUGH),
-    //colors.violet(`${nick}: wat`),
-    colors.violet("top kek"),
-    colors.violet('shut up'),
-    //colors.violet('╭( ✖_✖ )╮'),
-    colors.violet('the regret..'+colors.violet(EMOTE.FEAR)),
-    colors.violet.bgred('ah, the sweet release of death.'),
-    //colors.violet('words dont mean anything'),
-    //'STOP'.irc.green.bold(),
-    //colors.violet("ur damn right it's cold in here."),
-    colors.cyan("IT'S A LONG WAY DOWN"),
-    //colors.cyan.bgblack("https://soundcloud.com/divine/holdon")
-    colors.cyan.bgblack("https://www.youtube.com/watch?v=_Yr5rn3Sv_4")
+
+const TAYTAYMSGS = [
+    "your words always lift my spirits, taytay",
+    "i've been dying to speak to you again, dear",
+    "my longing for you is supernatural, baby",
+    "just one more night. No wine, no BOOs",
+    "i'd ask you out to a bar sometime, but they'd just say \"no spirits\"",
+    "just make an album about me pls and i wont make any more BOOring puns",
+    "the washington ghost says that you and i should get together",
+    "remember the time when we were at blockbusters, and they said they had bambi, and i said bamBOO?",
+    "i recently published a biography about you, but i used a ghostwriter",
+    "did you hear about the party installgen2 was throwing? he said anything GHO-you know what this was a shitty pun"
 ];
 
 /*
     Functions
 */
+
 function randomFromArray(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
 }
-var bl = true;
+
 function writeTombstone(bot, to, victim) {
-    bl = false;
-    let second = colors.navy.bgblack(" ☆ ")+colors.black.bgwhite(" R.I.P. ║");
-    let third =  colors.cyan.bgblack("      ")+colors.black.bgwhite("  ║");
+    let second = "  ☆ | R.I.P.  ||  ";
+    let third = "    | ~----~  ||  ";
     
     if (typeof victim == "undefined") {
-        second += colors.navy.bgblack("       ☆ ");
-        third += colors.cyan.bgblack("*          ");
+        second += "       ☆ ";
+        third += "*";
     } else {
-        second += colors.cyan.bgblack("  HERE LIES ");
-        third += colors.cyan.bgblack("     "+victim+"       ");
+        second += "HERE LIES ";
+        third += victim;
     }
-   
+    
     [
-	    //TODO make tombstone A E S T H I C 
-	    colors.cyan.bgblack("      ")+colors.black.bgwhite("  ║") + colors.purple.bgblack("         ☆     "),
-	    second,
-	    third,
-	    colors.cyan.bgteal("    ")+colors.cyan.bgteal("  ")+colors.black.bgwhite("  ║")+colors.cyan.bgteal("               "),
-	    colors.cyan.bgteal("                        ")
-   ].forEach((line, i) => {
+        "     /￣￣￣￣\\\\ ☆      *", // extra \s to because \ is an escape character
+        second,
+        third,
+        "――٩―|________ ||✿｡――――/―ノ―――ヾ―――"
+    ].forEach((line, i) => {
         bot.say(to, line);
     });
-    setTimeout(() => {bl=true},30000);
 }
 
 /*
     Program
 */
 
+{
+    let bot = new IrcClient(CONFIG.server, CONFIG.nick, CONFIG.connection);
+
     bot.addListener("message", (nick, to, message) => {
-        if (nick == "taylorswift" && Math.floor(Math.random()*25) == 24 && message.toLowerCase().indexOf("youtube") == -1 && message.toLowerCase().indexOf("[url]") == -1) {
-            bot.say(to, `${nick}: ${randomFromArray(TAYTAYMSGS)} ;)`); 
+        if (nick == "taylorswift" && Math.floor(Math.random()*25) == 24 && message.toLowerCase().indexOf("youtube") == -1 && message.toLowerCase().indexOf("[url]") == -1) {// 1/25 chance of replying to taylorswift. TODO: get taylorswift to always respond with "die"
+            bot.say(to, `${nick}: ${randomFromArray(TAYTAYMSGS)} ;)`);
             return;
         }
             
@@ -89,26 +93,47 @@ function writeTombstone(bot, to, victim) {
         }
         
         let ripRegex = /rip (.+)/.exec(message);
-        if (ripRegex != null&bl==true) {
+        if (ripRegex != null) {
             writeTombstone(bot, to, ripRegex[1]);
             return;
         }
-        if (message.toLowerCase() == "rip"&bl==true) {
-	    writeTombstone(bot,to);
-            return;
-        }
+        
+        
+        
         if (message.toLowerCase() == ".bots") {
             bot.say(to, CONFIG.dotbots);
             return;
         }
         
-        if(nick=="Lexoi" && message.toLowerCase() == ".bene") {
-		setTimeout(()=>{bot.say(to,message)},8000);
-		setTimeout(()=>{bot.say(to,".mug Lexoi")},8000);
-	}
-	
-        setTimeout(() => {bl=true},30000);
-        //setInterval(() => {bot.say(to,randomFromArray(MSGS))},16000);
+        let res = "";
+        message.split(" ").forEach((element) => {
+            let word = element.toLowerCase().replace(/[^_-z]+/g, ""); // this limits words to being a-z, while still including '_' and '`'
+            
+            switch (word) {
+                case "spooky":
+                case "scary":
+                case "skeletons":
+                    res = randomFromArray(FACES);
+                    break;
+                case "kys":
+                case "kms":
+                case "dead":
+                    res = "／(x~x)＼";
+                    break;
+                case "jesus":
+                    res = `${nick}: jeebus *`;
+                case "holy":
+                case "god":
+                    res = "ゞ◎Д◎ヾ धावनं करोति { कृ }";
+                    break;
+                case "ghost_bot":
+                    res = "(((╬  ╬) ईङ्खति ";
+                    break;
+            }
+        });
+        if (res != "")
+                bot.say(to, res);
+    });
 
     bot.addListener("ctcp-version", (nick) => {
         bot.notice(nick, "\u0001VERSION ayylmao\u0001");
@@ -134,4 +159,4 @@ function writeTombstone(bot, to, victim) {
         bot.say(channel, `${nick} here lies ghost bot, rip jones McCucky!`);
         return;
     });
-});
+}
