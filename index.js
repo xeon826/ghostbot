@@ -79,6 +79,17 @@ function writeTombstone(bot, to, victim) {
     }
 
 //    let ripRegex = /^rip (.+)/.exec(message);
+// split a string into two parts at the first instance of a separator
+// const cleave = module.exports = function(s, separator = ' '){
+// 	const i = s.indexOf(separator)
+// 	return (i === -1)
+// 	? [s, '']
+// 	: [
+// 		s.slice(0, i),
+// 		s.slice(i+1),
+// 	]
+// }
+// const [f, x] = cleave(message);
     let ripRegex = /^rip\s+(?:i\w+\s+p\w+\s+)?(\S{1,25})/.exec(message);
     if (ripRegex != null) {
       writeTombstone(bot, to, ripRegex[1]);
