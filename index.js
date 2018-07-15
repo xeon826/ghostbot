@@ -41,16 +41,15 @@ function writeTombstone(bot, to, victim) {
   let second = colors.navy.bgblack(" ☆ ") + colors.black.bgwhite(" R.I.P. ║");
   let third = colors.cyan.bgblack("      ") + colors.black.bgwhite("  ║");
 
-  if (typeof victim == "undefined") {
-    second += colors.navy.bgblack("       ☆ ");
-    third += colors.cyan.bgblack("*          ");
+  if (victim == "") {
+    second += colors.navy.bgblack("       ☆    ");
+    third += colors.cyan.bgblack("               ");
   } else {
     second += colors.cyan.bgblack("  HERE LIES ");
-    third += colors.cyan.bgblack("     " + victim + "       ");
+    third += colors.cyan.bgblack("     " + victim + "          ");
   }
 
   [
-    //TODO make tombstone A E S T H I C
     colors.cyan.bgblack("      ") + colors.black.bgwhite("  ║") + colors.purple.bgblack("         ☆     "),
     second,
     third,
@@ -67,6 +66,13 @@ function writeTombstone(bot, to, victim) {
 
 {
   let bot = new IrcClient(CONFIG.server, CONFIG.nick, CONFIG.connection);
+  const cleave = module.exports = function(s, separator = ' ') {
+    const i = s.indexOf(separator)
+    return (i === -1) ? [s, ''] : [
+      s.slice(0, i),
+      s.slice(i + 1),
+    ]
+  }
 
   bot.addListener("message", (nick, to, message) => {
     if (nick == "tay" && Math.floor(Math.random() * 25) == 24 && message.toLowerCase().indexOf("youtube") == -1 && message.toLowerCase().indexOf("[url]") == -1) { // 1/25 chance of replying to taylorswift. TODO: get taylorswift to always respond with "die"
@@ -78,22 +84,10 @@ function writeTombstone(bot, to, victim) {
       return;
     }
 
-//    let ripRegex = /^rip (.+)/.exec(message);
-// split a string into two parts at the first instance of a separator
-// const cleave = module.exports = function(s, separator = ' '){
-// 	const i = s.indexOf(separator)
-// 	return (i === -1)
-// 	? [s, '']
-// 	: [
-// 		s.slice(0, i),
-// 		s.slice(i+1),
-// 	]
-// }
-// const [f, x] = cleave(message);
-    let ripRegex = /^rip\s+(?:i\w+\s+p\w+\s+)?(\S{1,25})/.exec(message);
-    if (ripRegex != null) {
-      writeTombstone(bot, to, ripRegex[1]);
-      return;
+    // split a string into two parts at the first instance of a separator
+    const [f, x] = cleave(message);
+    if (f == '.rip' && x.length < 30) {
+      writeTombstone(bot, to, x);
     }
 
 
