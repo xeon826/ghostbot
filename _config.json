@@ -1,10 +1,10 @@
 {
     "ignoreList": ["CummyPawsBot", "Combot", "PastaBot", "cuckbot", "kekbot", "pepebot", "katbot"],
-    "nick": "ghost_bot",
+    "nick": "dan_mobi1e",
     "server": "irc.rizon.net",
     "dotbots": "Reporting in! [meme.js] https://github.com/asmith9/ghostbot",
     "connection": {
-        "channels": ["#pasta",""#gaycedra","#myg0t"],
+        "channels": ["#/music/", "#dan_learns_german"],
         "port": 6697,
         "secure": true,
         "selfSigned": true,
@@ -15,7 +15,7 @@
         "stripColors": true
     },
     "nickserv": {
-        "enabled": false,
-        "password": "userpass"
+        "enabled": true,
+        "password": "gdadg"
     }
 }

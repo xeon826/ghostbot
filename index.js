@@ -4,7 +4,9 @@
     Imports
 */
 
+
 let IrcClient = require("irc").Client;
+const ytdl = require('ytdl-core');
 const CONFIG = require("./config.json");
 const EMOTE = require('./emote.json');
 const colors = require('irc-colors');
@@ -74,7 +76,19 @@ function writeTombstone(bot, to, victim) {
     ]
   }
 
+  function youtube_parser(url) {
+    var regExp = /^https?\:\/\/(?:www\.youtube(?:\-nocookie)?\.com\/|m\.youtube\.com\/|youtube\.com\/)?(?:ytscreeningroom\?vi?=|youtu\.be\/|vi?\/|user\/.+\/u\/\w{1,2}\/|embed\/|watch\?(?:.*\&)?vi?=|\&vi?=|\?(?:.*\&)?vi?=)([^#\&\?\n\/<>"']*)/i;
+    var match = url.match(regExp);
+    return (match && match[1].length == 11) ? match[1] : false;
+  }
   bot.addListener("message", (nick, to, message) => {
+    var is_youtube_link = youtube_parser(message);
+    if (is_youtube_link) {
+      ytdl.getInfo(message).then(info => {
+        bot.say(to, info.videoDetails.title)
+      })
+    }
+
     if (nick == "tay" && Math.floor(Math.random() * 25) == 24 && message.toLowerCase().indexOf("youtube") == -1 && message.toLowerCase().indexOf("[url]") == -1) { // 1/25 chance of replying to taylorswift. TODO: get taylorswift to always respond with "die"
       bot.say(to, `${nick}: ${randomFromArray(TAYTAYMSGS)} ;)`);
       return;

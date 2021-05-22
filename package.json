@@ -6,7 +6,10 @@
   "private": true,
   "dependencies": {
     "irc": "~0.3.12",
-    "irc-colors": "^1.2.1"
+    "irc-colors": "^1.2.1",
+    "node-html-parser": "^3.3.0",
+    "ytdl": "^1.4.1",
+    "ytdl-core": "^4.8.0"
   },
   "devDependencies": {},
   "scripts": {
