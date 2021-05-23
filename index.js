@@ -114,24 +114,16 @@ function writeTombstone(bot, to, victim) {
     let res = "";
     message.split(" ").forEach((element) => {
       let word = element.toLowerCase().replace(/[^_-z]+/g, ""); // this limits words to being a-z, while still including '_' and '`'
-
       switch (word) {
-        case "spooky":
-        case "scary":
-        case "skeletons":
         case "boo":
           res = randomFromArray(EMOTE.FEAR);
           break;
         case "kys":
         case "kms":
-        case "dead":
           res = "／(x~x)＼";
           break;
         case "jesus":
           res = `${nick}: jeebus *`;
-          break;
-        case "ghost_bot":
-          res = '(･_├┬┴┬┴┬';
           break;
       }
     });
