@@ -82,7 +82,7 @@ function writeTombstone(bot, to, victim) {
     msg_fragments.forEach(function(fragment) {
       if (youtube_parser(fragment))
         ytdl.getInfo(fragment).then(info => {
-          bot.say(to, info.videoDetails.title)
+          bot.say(to, `Title | ${info.videoDetails.title}`)
         })
     })
 
