@@ -4,18 +4,16 @@
     Imports
 */
 
-
 let IrcClient = require("irc").Client;
-const ytdl = require('ytdl-core');
+const ytdl = require("ytdl-core");
 const CONFIG = require("./config.json");
-const EMOTE = require('./emote.json');
-const colors = require('irc-colors');
+const EMOTE = require("./emote.json");
+const colors = require("irc-colors");
 
 /*
     Constants
 */
 // comment
-
 
 const TAYTAYMSGS = [
   "your words always lift my spirits, taytay",
@@ -28,7 +26,7 @@ const TAYTAYMSGS = [
   "remember the time when we were at blockbusters, and they said they had bambi, and i said bamBOO?",
   "i recently published a biography about you, but i used a ghostwriter",
   "i died so I could haunt you.",
-  "did you hear about the party installgen2 was throwing? he said anything GHO-you know what this was a shitty pun"
+  "did you hear about the party installgen2 was throwing? he said anything GHO-you know what this was a shitty pun",
 ];
 
 /*
@@ -52,11 +50,16 @@ function writeTombstone(bot, to, victim) {
   }
 
   [
-    colors.cyan.bgblack("      ") + colors.black.bgwhite("  ║") + colors.purple.bgblack("         ☆     "),
+    colors.cyan.bgblack("      ") +
+      colors.black.bgwhite("  ║") +
+      colors.purple.bgblack("         ☆     "),
     second,
     third,
-    colors.cyan.bgteal("    ") + colors.cyan.bgteal("  ") + colors.black.bgwhite("  ║") + colors.cyan.bgteal("               "),
-    colors.cyan.bgteal("                        ")
+    colors.cyan.bgteal("    ") +
+      colors.cyan.bgteal("  ") +
+      colors.black.bgwhite("  ║") +
+      colors.cyan.bgteal("               "),
+    colors.cyan.bgteal("                        "),
   ].forEach((line, i) => {
     bot.say(to, line);
   });
@@ -68,25 +71,38 @@ function writeTombstone(bot, to, victim) {
 
 {
   let bot = new IrcClient(CONFIG.server, CONFIG.nick, CONFIG.connection);
-  const cleave = module.exports = function(s, separator = ' ') {
-    const i = s.indexOf(separator)
-    return (i === -1) ? [s, ''] : [
-      s.slice(0, i),
-      s.slice(i + 1),
-    ]
-  }
-
+  const cleave = (module.exports = function (s, separator = " ") {
+    const i = s.indexOf(separator);
+    return i === -1 ? [s, ""] : [s.slice(0, i), s.slice(i + 1)];
+  });
 
   bot.addListener("message", (nick, to, message) => {
-    var msg_fragments = message.split(' ');
-    msg_fragments.forEach(function(fragment) {
-      if (youtube_parser(fragment))
-        ytdl.getInfo(fragment).then(info => {
-          bot.say(to, `Title | ${info.videoDetails.title}`)
-        })
-    })
+    // Regular expression to match the medium.com URL pattern
+    const mediumUrlPattern = /https:\/\/medium\.com\/p\/([a-zA-Z0-9]{12})/g;
 
-    if (nick == "tay" && Math.floor(Math.random() * 25) == 24 && message.toLowerCase().indexOf("youtube") == -1 && message.toLowerCase().indexOf("[url]") == -1) { // 1/25 chance of replying to taylorswift. TODO: get taylorswift to always respond with "die"
+    // Replace all medium URLs with the freedium.cfd domain
+    const modifiedMessage = message.replace(
+      mediumUrlPattern,
+      "https://freedium.cfd/$1",
+    );
+
+    bot.say("D_A_N", `${nick}: ${modifiedMessage}`);
+
+    var msg_fragments = message.split(" ");
+    msg_fragments.forEach(function (fragment) {
+      if (youtube_parser(fragment))
+        ytdl.getInfo(fragment).then((info) => {
+          bot.say(to, `Title | ${info.videoDetails.title}`);
+        });
+    });
+
+    if (
+      nick == "tay" &&
+      Math.floor(Math.random() * 25) == 24 &&
+      message.toLowerCase().indexOf("youtube") == -1 &&
+      message.toLowerCase().indexOf("[url]") == -1
+    ) {
+      // 1/25 chance of replying to taylorswift. TODO: get taylorswift to always respond with "die"
       bot.say(to, `${nick}: ${randomFromArray(TAYTAYMSGS)} ;)`);
       return;
     }
@@ -97,11 +113,9 @@ function writeTombstone(bot, to, victim) {
 
     // split a string into two parts at the first instance of a separator
     const [f, x] = cleave(message);
-    if (f == '.rip' && x.length < 30) {
+    if (f == ".rip" && x.length < 30) {
       writeTombstone(bot, to, x);
     }
-
-
 
     if (message.toLowerCase() == ".bots") {
       bot.say(to, CONFIG.dotbots);
@@ -124,8 +138,7 @@ function writeTombstone(bot, to, victim) {
           break;
       }
     });
-    if (res != "")
-      bot.say(to, res);
+    if (res != "") bot.say(to, res);
   });
 
   bot.addListener("ctcp-version", (nick) => {
@@ -137,7 +150,7 @@ function writeTombstone(bot, to, victim) {
     return;
   });
 
-  bot.on("motd", function(motd) {
+  bot.on("motd", function (motd) {
     console.log(motd);
   });
 
@@ -155,7 +168,8 @@ function writeTombstone(bot, to, victim) {
 }
 
 function youtube_parser(url) {
-  var regExp = /^https?\:\/\/(?:www\.youtube(?:\-nocookie)?\.com\/|m\.youtube\.com\/|youtube\.com\/)?(?:ytscreeningroom\?vi?=|youtu\.be\/|vi?\/|user\/.+\/u\/\w{1,2}\/|embed\/|watch\?(?:.*\&)?vi?=|\&vi?=|\?(?:.*\&)?vi?=)([^#\&\?\n\/<>"']*)/i;
+  var regExp =
+    /^https?\:\/\/(?:www\.youtube(?:\-nocookie)?\.com\/|m\.youtube\.com\/|youtube\.com\/)?(?:ytscreeningroom\?vi?=|youtu\.be\/|vi?\/|user\/.+\/u\/\w{1,2}\/|embed\/|watch\?(?:.*\&)?vi?=|\&vi?=|\?(?:.*\&)?vi?=)([^#\&\?\n\/<>"']*)/i;
   var match = url.match(regExp);
-  return (match && match[1].length == 11) ? match[1] : false;
+  return match && match[1].length == 11 ? match[1] : false;
 }
