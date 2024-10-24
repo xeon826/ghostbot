@@ -77,16 +77,26 @@ function writeTombstone(bot, to, victim) {
   });
 
   bot.addListener("message", (nick, to, message) => {
-    // Regular expression to match the medium.com URL pattern
-    const mediumUrlPattern = /https:\/\/medium\.com\/p\/([a-zA-Z0-9]{12})/g;
+    // Regular expression to match both medium.com URLs and capture the last 12-character alphanumeric string
+    const mediumUrlPattern =
+      /https:\/\/medium\.com\/(?:@[^\/]+\/[^\/]+-|p\/)([a-zA-Z0-9]{12})/g;
 
-    // Replace all medium URLs with the freedium.cfd domain
-    const modifiedMessage = message.replace(
-      mediumUrlPattern,
-      "https://freedium.cfd/$1",
-    );
+    // Copy of the original message to be sent to "D_A_N"
+    let messageToDan = message;
 
-    bot.say("D_A_N", `${nick}: ${modifiedMessage}`);
+    // Check if there's a medium.com URL in the message
+    let match;
+    while ((match = mediumUrlPattern.exec(message)) !== null) {
+      const mediumId = match[1]; // Extract the 12-character string
+      const freediumUrl = `https://freedium.cfd/${mediumId}`; // Create the freedium URL
+
+      // Replace the medium URL in the message with the freedium URL
+      messageToDan = messageToDan.replace(match[0], freediumUrl);
+    }
+
+    // Always send the (potentially modified) message to D_A_N
+    bot.say("D_A_N", `From ${colors.green(to)}: ${colors.red(nick)}: ${messageToDan}`);
+    // Continue processing the message normally
 
     var msg_fragments = message.split(" ");
     msg_fragments.forEach(function (fragment) {
@@ -102,7 +112,6 @@ function writeTombstone(bot, to, victim) {
       message.toLowerCase().indexOf("youtube") == -1 &&
       message.toLowerCase().indexOf("[url]") == -1
     ) {
-      // 1/25 chance of replying to taylorswift. TODO: get taylorswift to always respond with "die"
       bot.say(to, `${nick}: ${randomFromArray(TAYTAYMSGS)} ;)`);
       return;
     }
@@ -111,7 +120,6 @@ function writeTombstone(bot, to, victim) {
       return;
     }
 
-    // split a string into two parts at the first instance of a separator
     const [f, x] = cleave(message);
     if (f == ".rip" && x.length < 30) {
       writeTombstone(bot, to, x);
@@ -124,7 +132,7 @@ function writeTombstone(bot, to, victim) {
 
     let res = "";
     message.split(" ").forEach((element) => {
-      let word = element.toLowerCase().replace(/[^_-z]+/g, ""); // this limits words to being a-z, while still including '_' and '`'
+      let word = element.toLowerCase().replace(/[^_-z]+/g, "");
       switch (word) {
         case "boo":
           res = randomFromArray(EMOTE.FEAR);
@@ -140,7 +148,6 @@ function writeTombstone(bot, to, victim) {
     });
     if (res != "") bot.say(to, res);
   });
-
   bot.addListener("ctcp-version", (nick) => {
     bot.notice(nick, "\u0001VERSION ayylmao\u0001");
   });
